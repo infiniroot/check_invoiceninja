@@ -1,4 +1,6 @@
 # check_invoiceninja
+![alt text](https://www.infiniroot.com/graph/news/973-infiniroot-invoiceninja.png)
+
 Monitoring plugin to check Invoice Ninja application. Right now the plugin only checks for the expiration of an Invoice Ninja license (usually a White Label license).
 
 The plugin connects to the Invoice Ninja database and requires read rights on the table companies within Invoice Ninja's database.
