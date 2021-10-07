@@ -18,3 +18,7 @@ With warning threshold (N days):
 # /usr/lib/nagios/plugins/check_invoiceninja.sh -H localhost -u monitoring -p secret -d invoiceninja -w 7
 INVOICENINJA WARNING - white_label license will expire in 14 hours
 ```
+
+## Invoice Ninja Server
+
+Interested in our dedicated managed Invoice Ninja servers? https://www.infiniroot.com/dedicated-hosting/invoiceninja-billing.php
