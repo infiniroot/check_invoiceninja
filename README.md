@@ -5,19 +5,41 @@ Monitoring plugin to check Invoice Ninja application. Right now the plugin only 
 
 The plugin connects to the Invoice Ninja database and requires read rights on the table companies within Invoice Ninja's database.
 
+Support both Invoice Ninja v4 and v5. 
+
 ## Run the plugin
 
+### Invoice Ninja v5
+
 ```
-# /usr/lib/nagios/plugins/check_invoiceninja.sh -H localhost -u monitoring -p secret -d invoiceninja
-INVOICENINJA WARNING - white_label license will expire in 14 hours
+$ /usr/lib/nagios/plugins/check_invoiceninja.sh -H localhost -u monitoring -p secret -d invoiceninja5
+INVOICENINJA OK - white_label license will expire in 216 days
 ```
 
 With warning threshold (N days):
 
 ```
-# /usr/lib/nagios/plugins/check_invoiceninja.sh -H localhost -u monitoring -p secret -d invoiceninja -w 7
-INVOICENINJA WARNING - white_label license will expire in 14 hours
+$ /usr/lib/nagios/plugins/check_invoiceninja.sh -H localhost -u monitoring -p secret -d invoiceninja5 -w 250
+INVOICENINJA WARNING - white_label license will expire in 216 days
 ```
+
+### Invoice Ninja v4
+
+By default the plugin assumes it runs against an Invoice Ninja v5 database (since plugin version 1.1). To use Invoice Ninja v4, add the `-v 4` parameter:
+
+```
+$ /usr/lib/nagios/plugins/check_invoiceninja.sh -H localhost -u monitoring -p secret -d invoiceninja -v 4
+INVOICENINJA WARNING - white_label license will expire in 6 days
+```
+
+With a lower warning threshold:
+
+```
+$ /usr/lib/nagios/plugins/check_invoiceninja.sh -H localhost -u monitoring -p secret -d invoiceninja -v 4 -w 2
+INVOICENINJA OK - white_label license will expire in 6 days
+```
+
+
 
 ## Invoice Ninja Server
 
