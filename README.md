@@ -3,9 +3,24 @@
 
 Monitoring plugin to check Invoice Ninja application. Right now the plugin only checks for the expiration of an Invoice Ninja license (usually a White Label license).
 
+Support both Invoice Ninja v4 and v5. 
+
+
+## MySQL preparations
 The plugin connects to the Invoice Ninja database and requires read rights on the table companies within Invoice Ninja's database.
 
-Support both Invoice Ninja v4 and v5. 
+Example for Invoice Ninja v4:
+
+```
+GRANT SELECT ON invoiceninja.companies TO 'monitoring'@'localhost' IDENTIFIED BY 'secret';
+```
+
+Example for Invoice Ninja v5:
+
+```
+GRANT SELECT ON invoiceninja.accounts TO 'monitoring'@'localhost' IDENTIFIED BY 'secret';
+```
+
 
 ## Run the plugin
 
