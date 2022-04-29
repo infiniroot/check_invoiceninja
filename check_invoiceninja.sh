@@ -50,6 +50,7 @@ Usage: $0 [-H MySQLHost ] -u MySQLUser [-p MySQLPassword] -d Database [-w int]\n
 \t-p MySQL password (supports MySQL environment variables and ~./my.cnf)\n
 \t-d Database to connect to (Invoice Ninja database)\n
 \t-w Warn when license will expire in N days\n
+\t-v Define Invoice Ninja version, either 4 or 5 (defaults to 5)\n
 \nMySQL privileges:\n
 The license information is stored in the Invoice Ninja database.\n
 You therefore need to use a MySQL user which has read access to the relevant table holding the license information.\n
