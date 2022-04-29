@@ -19,10 +19,12 @@
 #                                                                                   #
 # History/Changelog                                                                 #
 # 2021-04-26 1.0 Public release                                                     #
+# 2022-04-29 1.1 Support for Invoice Ninja v5                                       #
 #####################################################################################
 # (Pre-)Define some fixed variables
-version=1.0
+pluginversion=1.1
 warntime=7
+version=5
 STATE_OK=0              # define the exit code if status is OK
 STATE_WARNING=1         # define the exit code if status is Warning
 STATE_CRITICAL=2        # define the exit code if status is Critical
@@ -40,25 +42,30 @@ do
 done
 #####################################################################################
 # Help
-help="check_invoiceninja v${version} (c) 2021 Infiniroot\n
+help="check_invoiceninja v${pluginversion} (c) 2021-2022 Infiniroot\n
 Usage: $0 [-H MySQLHost ] -u MySQLUser [-p MySQLPassword] -d Database [-w int]\n
 \nOptions:\n
 \t-H MySQL Host to connect to (defaults to localhost)\n
-\t-u MySQL username to connect with\n
-\t-p MySQL password to connect with (supports MySQL environment variables and ~./my.cnf)\n
+\t-u MySQL username\n
+\t-p MySQL password (supports MySQL environment variables and ~./my.cnf)\n
 \t-d Database to connect to (Invoice Ninja database)\n
 \t-w Warn when license will expire in N days\n
+\t-v Define Invoice Ninja version, either 4 or 5 (defaults to 5)\n
 \nMySQL privileges:\n
-The license information is stored in the Invoice Ninja database in the table companies.\n
-You therefore need to use a MySQL user which has read access to this table. Example:\n
-\tGRANT SELECT ON invoiceninja.companies TO 'monitoring'@'localhost' IDENTIFIED BY 'password';\n"
+The license information is stored in the Invoice Ninja database.\n
+You therefore need to use a MySQL user which has read access to the relevant table holding the license information.\n
+\nExample for Invoice Ninja v4:\n
+\tGRANT SELECT ON invoiceninja.companies TO 'monitoring'@'localhost' IDENTIFIED BY 'password';\n
+\nExample for Invoice Ninja v5:\n
+\tGRANT SELECT ON invoiceninja.accounts TO 'monitoring'@'localhost' IDENTIFIED BY 'password';\n
+"
 
 if [ "${1}" = "--help" -o "${#}" = "0" ];
   then echo -e ${help}; exit 1;
 fi
 #####################################################################################
 # Get user-given variables
-while getopts "H:u:p:d:w:h" Input;
+while getopts "H:u:p:d:w:v:h" Input;
 do
   case ${Input} in
   H)      mysqlhost=${OPTARG};;
@@ -66,6 +73,7 @@ do
   p)      mysqlpass=${OPTARG}; export MYSQL_PWD=${mysqlpass};;
   d)      mysqldb=${OPTARG};;
   w)      warntime=${OPTARG};;
+  v)      version=${OPTARG:=5};;
   h)      echo -e ${help}; exit ${STATE_UNKNOWN};;
   *)      echo -e ${help}; exit ${STATE_UNKNOWN};;
   esac
@@ -75,7 +83,11 @@ done
 if [ -z ${mysqluser} ]; then echo "INVOICENINJA UNKNOWN - Missing database user"; exit ${STATE_UNKNOWN}; fi
 if [ -z ${mysqldb} ]; then echo "INVOICENINJA UNKNOWN - Missing database name"; exit ${STATE_UNKNOWN}; fi
 #####################################################################################
-data=$(mysql -h ${mysqlhost:=localhost} -u ${mysqluser} -Bse "SELECT * FROM ${mysqldb}.companies WHERE plan = 'white_label' LIMIT 0,1" 2>&1)
+if [[ ${version} = 4 ]]; then
+  data=$(mysql -h ${mysqlhost:=localhost} -u ${mysqluser} -Bse "SELECT * FROM ${mysqldb}.companies WHERE plan = 'white_label' LIMIT 0,1" 2>&1)
+elif [[ ${version} = 5 ]]; then
+  data=$(mysql -h ${mysqlhost:=localhost} -u ${mysqluser} -Bse "SELECT * FROM ${mysqldb}.accounts WHERE plan = 'white_label' LIMIT 0,1" 2>&1)
+fi
 
 if [[ $(echo "${data}" | grep -ic ERROR) -gt 0 ]]; then 
 	echo "INVOICENINJA UNKNOWN - Unable to connect to database using given credentials"
