@@ -58,4 +58,4 @@ INVOICENINJA OK - white_label license will expire in 6 days
 
 ## Invoice Ninja Server
 
-Interested in our dedicated managed Invoice Ninja servers? https://www.infiniroot.com/dedicated-hosting/invoiceninja-billing.php
+Interested in our managed Invoice Ninja servers? -> https://www.infiniroot.com/dedicated-hosting/invoice-ninja
